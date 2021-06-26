@@ -1,5 +1,5 @@
 import torch
-from torchtext.datasets import Multi30k
+from torchtext.datasets import Multi30k, IWSLT, WMT14
 from torchtext.data import Field, BucketIterator
 
 import spacy
@@ -13,7 +13,7 @@ SEED = 9999
 random.seed(SEED)
 np.random.seed(SEED)
 torch.manual_seed(SEED)
-
+DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 spacy_de = spacy.load('de_core_news_sm')
 spacy_en = spacy.load('en_core_web_sm')
 
@@ -38,15 +38,53 @@ trg = Field(tokenize=tokenize_en,
             lower=True)
 
 
-train_data, valid_data, test_data = Multi30k.splits(exts=('.de', '.en'),
-                                                    fields=(src, trg))
+def data_loader(datasets='multi30k'):
+    start = time.time()
+    if datasets.lower() == "multi30k":
+        train_data, valid_data, test_data = Multi30k.splits(exts=('.de', '.en'),
+                                                            fields=(src, trg))
 
-# print(f"Number of training examples: {len(train_data.examples)}")
-# print(f"Number of validation examples: {len(valid_data.examples)}")
-# print(f"Number of testing examples: {len(test_data.examples)}")
+    elif datasets.lower() == "wmt14":
+        train_data, valid_data, test_data = WMT14.splits(exts=('.de', '.en'),
+                                                         fields=(src, trg))
 
-src.build_vocab(train_data, min_freq = 2)
-trg.build_vocab(train_data, min_freq = 2)
+    elif datasets.lower() == "iwslt":
+        train_data, valid_data, test_data = IWSLT.splits(exts=('.de', '.en'),
+                                                         fields=(src, trg))
+    else:
+        train_data, valid_data, test_data = Multi30k.splits(exts=('.de', '.en'),
+                                                            fields=(src, trg))
+    end = time.time()
+    print(f"Time taken to download data : {end - start}")
 
-print(f"Unique tokens in source (de) vocabulary: {len(src.vocab)}")
-print(f"Unique tokens in target (en) vocabulary: {len(trg.vocab)}")
+    print(f"Number of training examples: {len(train_data.examples)}")
+    print(f"Number of validation examples: {len(valid_data.examples)}")
+    print(f"Number of testing examples: {len(test_data.examples)}")
+
+    return train_data, valid_data, test_data
+
+
+def vocab_builder(training_data, min_freq=2):
+    src.build_vocab(training_data, min_freq=min_freq)
+    trg.build_vocab(training_data, min_freq=min_freq)
+
+    print(f"Unique tokens in source (de) vocabulary: {len(src.vocab)}")
+    print(f"Unique tokens in target (en) vocabulary: {len(trg.vocab)}")
+
+    return src, trg
+
+
+def data_iterator(train_data, valid_data, test_data, batch_size=64):
+    train_iterator, valid_iterator, test_iterator = BucketIterator.splits(
+        (train_data, valid_data, test_data),
+        batch_size=batch_size,
+        device=DEVICE)
+
+    return train_iterator, valid_iterator, test_iterator
+
+
+if __name__ == "__main__":
+    train_data, val_data, test_data = data_loader()
+    source, target = vocab_builder(train_data)
+    train_itr, val_itr, test_itr = data_iterator(train_data, val_data, test_data)
+
