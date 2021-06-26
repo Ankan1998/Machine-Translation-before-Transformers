@@ -40,6 +40,13 @@ trg = Field(tokenize=tokenize_en,
 
 train_data, valid_data, test_data = Multi30k.splits(exts=('.de', '.en'),
                                                     fields=(src, trg))
-print(f"Number of training examples: {len(train_data.examples)}")
-print(f"Number of validation examples: {len(valid_data.examples)}")
-print(f"Number of testing examples: {len(test_data.examples)}")
+
+# print(f"Number of training examples: {len(train_data.examples)}")
+# print(f"Number of validation examples: {len(valid_data.examples)}")
+# print(f"Number of testing examples: {len(test_data.examples)}")
+
+src.build_vocab(train_data, min_freq = 2)
+trg.build_vocab(train_data, min_freq = 2)
+
+print(f"Unique tokens in source (de) vocabulary: {len(src.vocab)}")
+print(f"Unique tokens in target (en) vocabulary: {len(trg.vocab)}")
