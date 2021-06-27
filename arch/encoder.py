@@ -35,8 +35,8 @@ if __name__ == "__main__":
     num_layers = 2
     encoder_dropout = float(0.5)
 
-    encoder_lstm = Encoder(input_size_encoder, encoder_embedding_size,
-                               hidden_size, num_layers, encoder_dropout)
+    encoder_lstm = Encoder(input_size_encoder, hidden_size, encoder_embedding_size,
+                                num_layers, encoder_dropout)
     print(encoder_lstm)
 
 
