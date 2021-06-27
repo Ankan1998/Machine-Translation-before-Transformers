@@ -18,18 +18,18 @@ class Decoder(nn.Module):
         output, (hidden, cell) = self.rnn(embedded, (hidden, cell))
         prediction = self.fc_out(output.squeeze(0))
 
-        return prediction, hidden, cell, output
+        return prediction, hidden, cell
 
 
 if __name__ == "__main__":
     train_data, val_data, test_data = data_loader()
     source, target = vocab_builder(train_data)
-    input_size_encoder = len(target.vocab)
-    encoder_embedding_size = 300
+    target_size_encoder = len(target.vocab)
+    decoder_embedding_size = 300
     hidden_size = 1024
     num_layers = 2
-    encoder_dropout = float(0.5)
+    dropout = float(0.5)
 
-    decoder_lstm = Decoder(input_size_encoder, encoder_embedding_size,
-                           hidden_size, num_layers, encoder_dropout)
+    decoder_lstm = Decoder(target_size_encoder, decoder_embedding_size,
+                           hidden_size, num_layers, dropout)
     print(decoder_lstm)
