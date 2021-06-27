@@ -22,4 +22,14 @@ class Decoder(nn.Module):
 
 
 if __name__ == "__main__":
-    pass
+    train_data, val_data, test_data = data_loader()
+    source, target = vocab_builder(train_data)
+    input_size_encoder = len(target.vocab)
+    encoder_embedding_size = 300
+    hidden_size = 1024
+    num_layers = 2
+    encoder_dropout = float(0.5)
+
+    decoder_lstm = Decoder(input_size_encoder, encoder_embedding_size,
+                           hidden_size, num_layers, encoder_dropout)
+    print(decoder_lstm)
