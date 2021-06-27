@@ -31,4 +31,18 @@ class Seq2seq(nn.Module):
 
 
 if __name__ == "__main__":
-    pass
+    train_data, val_data, test_data = data_loader()
+    source, target = vocab_builder(train_data)
+    input_size_encoder = len(source.vocab)
+    target_size_encoder = len(target.vocab)
+    embedding_size = 300
+    hidden_size = 1024
+    num_layers = 2
+    dropout = float(0.5)
+
+    encoder_lstm = Encoder(input_size_encoder, hidden_size, embedding_size,
+                                num_layers, dropout)
+    decoder_lstm = Decoder(target_size_encoder, embedding_size,
+                               hidden_size, num_layers, dropout)
+    s2s = Seq2seq(encoder_lstm, decoder_lstm)
+    print(s2s)
