@@ -4,7 +4,7 @@ from torchtext.data import Field, BucketIterator
 
 import spacy
 import numpy as np
-
+import os
 import random
 import math
 import time
@@ -37,54 +37,62 @@ trg = Field(tokenize=tokenize_en,
             eos_token='<eos>',
             lower=True)
 
+class DataCreator:
 
-def data_loader(datasets='multi30k'):
-    start = time.time()
-    if datasets.lower() == "multi30k":
-        train_data, valid_data, test_data = Multi30k.splits(exts=('.de', '.en'),
-                                                            fields=(src, trg))
+    def data_loader(self, data_src='data_utils/.data', datasets='multi30k'):
+        start = time.time()
+        if datasets.lower() == "multi30k":
+            train_data, valid_data, test_data = Multi30k.splits(exts=('.de', '.en'),
+                                                                fields=(src, trg),
+                                                                root=data_src)
 
-    elif datasets.lower() == "wmt14":
-        train_data, valid_data, test_data = WMT14.splits(exts=('.de', '.en'),
-                                                         fields=(src, trg))
+        elif datasets.lower() == "wmt14":
+            train_data, valid_data, test_data = WMT14.splits(exts=('.de', '.en'),
+                                                             fields=(src, trg),
+                                                             root=data_src)
 
-    elif datasets.lower() == "iwslt":
-        train_data, valid_data, test_data = IWSLT.splits(exts=('.de', '.en'),
-                                                         fields=(src, trg))
-    else:
-        train_data, valid_data, test_data = Multi30k.splits(exts=('.de', '.en'),
-                                                            fields=(src, trg))
-    end = time.time()
-    print(f"Time taken to download data : {end - start}")
+        elif datasets.lower() == "iwslt":
+            train_data, valid_data, test_data = IWSLT.splits(exts=('.de', '.en'),
+                                                             fields=(src, trg),
+                                                             root=data_src)
+        else:
+            train_data, valid_data, test_data = Multi30k.splits(exts=('.de', '.en'),
+                                                                fields=(src, trg),
+                                                                root=data_src)
+        end = time.time()
+        print(f"Time taken to download data : {end - start}")
 
-    print(f"Number of training examples: {len(train_data.examples)}")
-    print(f"Number of validation examples: {len(valid_data.examples)}")
-    print(f"Number of testing examples: {len(test_data.examples)}")
+        print(f"Number of training examples: {len(train_data.examples)}")
+        print(f"Number of validation examples: {len(valid_data.examples)}")
+        print(f"Number of testing examples: {len(test_data.examples)}")
 
-    return train_data, valid_data, test_data
-
-
-def vocab_builder(training_data, min_freq=2):
-    src.build_vocab(training_data, min_freq=min_freq)
-    trg.build_vocab(training_data, min_freq=min_freq)
-
-    print(f"Unique tokens in source (de) vocabulary: {len(src.vocab)}")
-    print(f"Unique tokens in target (en) vocabulary: {len(trg.vocab)}")
-
-    return src, trg
+        return train_data, valid_data, test_data
 
 
-def data_iterator(train_data, valid_data, test_data, batch_size=64):
-    train_iterator, valid_iterator, test_iterator = BucketIterator.splits(
-        (train_data, valid_data, test_data),
-        batch_size=batch_size,
-        device=DEVICE)
+    def vocab_builder(self, training_data, min_freq=2):
+        src.build_vocab(training_data, min_freq=min_freq)
+        trg.build_vocab(training_data, min_freq=min_freq)
 
-    return train_iterator, valid_iterator, test_iterator
+        print(f"Unique tokens in source (de) vocabulary: {len(src.vocab)}")
+        print(f"Unique tokens in target (en) vocabulary: {len(trg.vocab)}")
+
+        return src, trg
+
+
+    def data_iterator(self, train_data, valid_data, test_data, batch_size=64):
+        train_iterator, valid_iterator, test_iterator = BucketIterator.splits(
+            (train_data, valid_data, test_data),
+            batch_size=batch_size,
+            device=DEVICE)
+
+        return train_iterator, valid_iterator, test_iterator
 
 
 if __name__ == "__main__":
-    train_data, val_data, test_data = data_loader()
-    source, target = vocab_builder(train_data)
-    train_itr, val_itr, test_itr = data_iterator(train_data, val_data, test_data)
+    data_c = DataCreator()
+    train_data, val_data, test_data = data_c.data_loader('.data')
+
+    source, target = data_c.vocab_builder(train_data)
+    #print(target.vocab.stoi[target.pad_token])
+    #train_itr, val_itr, test_itr = data_c.data_iterator(train_data, val_data, test_data)
 
