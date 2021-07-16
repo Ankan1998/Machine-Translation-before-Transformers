@@ -24,16 +24,16 @@ The Notebook file of the codebase will be soon made available to [my kaggle acco
 
 
 ### *TASKLIST*
-* [] Machine Translation with Bidirectional LSTM
+* [ ] Machine Translation with Bidirectional LSTM
     * [x] Data Preparation
     * [x] Encoder
     * [x] Decoder
     * [x] Seq2Seq
-    * [] Training Script
-    * [] Inference Script
-* [] Learning Phrase Representations using seq2seq Statistical Machine Translation
-* [] Machine Translation with Attention
-* [] Machine Translation with Convolutional Model
+    * [ ] Training Script
+    * [ ] Inference Script
+* [ ] Learning Phrase Representations using seq2seq Statistical Machine Translation
+* [ ] Machine Translation with Attention
+* [ ] Machine Translation with Convolutional Model
 
 
 
