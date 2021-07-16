@@ -1,5 +1,5 @@
-# <p align="center">Machine Translation before Transformers
-</p>
+![Untitled design-High-Quality](https://user-images.githubusercontent.com/36896102/125949224-b1d84ebf-e629-4648-92ab-3b613afae9ca.jpg)
+
 
 Breakthrough in NLP is the advent of Transformer on AI research community brought by the paper [Attention is all you need](https://arxiv.org/abs/1706.03762) by Vaswani et al. From then Transformer became part and parcel of NLP on different downstream task like Text Summarization, Machine Translation, Name Entity Recognition, Question Answering and also now its invading the field of [Computer Vision](https://arxiv.org/abs/2010.11929).
 
