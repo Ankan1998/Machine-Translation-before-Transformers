@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
-from encoder import Encoder
-from decoder import Decoder
-from se2seq import Seq2seq
+from seq2seq.encoder import Encoder
+from seq2seq.decoder import Decoder
+from seq2seq.se2seq import Seq2seq
 
 
 def init_weights(m):
@@ -16,11 +16,11 @@ def init_weights(m):
 def model_initializer(
         INPUT_DIM,
         OUTPUT_DIM,
-        ENC_EMB_DIM=256,
-        DEC_EMB_DIM=256,
-        HID_DIM=512,
-        ENC_DROPOUT=0.5,
-        DEC_DROPOUT=0.5,
+        ENC_EMB_DIM,
+        DEC_EMB_DIM,
+        HID_DIM,
+        ENC_DROPOUT,
+        DEC_DROPOUT,
         DEVICE='cpu'):
     enc = Encoder(INPUT_DIM, ENC_EMB_DIM, HID_DIM, ENC_DROPOUT)
     dec = Decoder(OUTPUT_DIM, DEC_EMB_DIM, HID_DIM, DEC_DROPOUT)
