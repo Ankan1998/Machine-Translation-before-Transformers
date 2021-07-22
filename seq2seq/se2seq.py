@@ -1,8 +1,8 @@
 import random
 import torch
 import torch.nn as nn
-from arch.encoder import Encoder
-from arch.decoder import Decoder
+from seq2seq.encoder import Encoder
+from seq2seq.decoder import Decoder
 from data_utils.data_preparation import DataCreator
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

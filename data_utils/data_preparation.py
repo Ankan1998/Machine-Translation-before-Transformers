@@ -90,7 +90,7 @@ class DataCreator:
 
 if __name__ == "__main__":
     data_c = DataCreator()
-    train_data, val_data, test_data = data_c.data_loader('.data')
+    train_data, val_data, test_data = data_c.data_loader()
 
     source, target = data_c.vocab_builder(train_data)
     #print(target.vocab.stoi[target.pad_token])
